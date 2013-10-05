@@ -9,7 +9,6 @@ public class IncrementalTrain{
 
 	public static void main(String[] args) throws Exception{
 			//create
-			//System.loadLibrary("/home/xiang7/Documents/Purdue/Adversarial Machine Learning/project/CCS2013/JNI_SVM-light-6.01/lib/svmlight");
 			run(	new File[] {new File(ConstantClass.folder+"pos2Vec"),new File(ConstantClass.folder+"neg2Vec")},
 					new File(ConstantClass.folder+"attackVec"),
 					new File(ConstantClass.TestVec),

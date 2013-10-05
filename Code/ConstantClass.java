@@ -12,7 +12,7 @@ public class ConstantClass {
 	public static int ADABOOST=2;
 	public static int currClassifier=ConstantClass.SVM;
 	public static String currClassifierName=classifierNames[currClassifier];
-	private static String MainFolder="~/ICDCS/Data/";
+	private static String MainFolder="../Data/";
 	private static String EgyptianFolder=MainFolder+"Egyptian/";
 	private static String ElectionFolder=MainFolder+"Election/";
 	private static String AndroidFolder=MainFolder+"Android/";
@@ -24,7 +24,7 @@ public class ConstantClass {
 	public static String PositiveEmoticon=MainFolder+"PositiveEmoticon";
 	public static String NegativeEmoticon=MainFolder+"NegativeEmoticon";
 	public static String tagger="I:\\documents\\document\\Purdue\\Research\\NamedEntityRecognition\\Data File\\english-left3words-distsim.tagger";
-	public static String FeatureFile=MainFolder+"Features";
+	public static String FeatureFile=folder+"Features";
 	public static String TestFile=MainFolder+"labeled_test";
 	private static String tweetTestVec=folder+"TestVec";
 	private static String commentTestVec=MainFolder+"Android/TestVec";

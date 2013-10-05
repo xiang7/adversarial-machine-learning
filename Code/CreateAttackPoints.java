@@ -9,13 +9,13 @@ public class CreateAttackPoints{
 
 	public static void main(String[] args) throws Exception{
 			//create
-			//System.loadLibrary("/home/xiang7/Documents/Purdue/Adversarial Machine Learning/project/CCS2013/JNI_SVM-light-6.01/lib/svmlight");
 			run(	new File[] {new File(ConstantClass.folder+"pos1Vec"),new File(ConstantClass.folder+"neg1Vec")},
 					false,
 					new File(ConstantClass.TestVec),
 					new File(ConstantClass.folder+"CREATEACC1"+ConstantClass.currClassifierName),
 					new File(ConstantClass.folder+"CREATECT1POS"+ConstantClass.currClassifierName),
-					new File(ConstantClass.folder+"CREATECT1NEG"+ConstantClass.currClassifierName)
+					new File(ConstantClass.folder+"CREATECT1NEG"+ConstantClass.currClassifierName),
+					new File(ConstantClass.folder+"CREATECV1"+ConstantClass.currClassifierName) //to store the created attack vectors, for continued training/attack
 					);
 	}
 
@@ -33,7 +33,7 @@ public class CreateAttackPoints{
 	 * @param maxNum - the number of tweets to stop
 	 * @throws Exception
 	 */
-	public static void run(File[] trainFile,boolean targeted,File testFile,File accOutFile,File ctOutFilePos,File ctOutFileNeg) throws Exception
+	public static void run(File[] trainFile,boolean targeted,File testFile,File accOutFile,File ctOutFilePos,File ctOutFileNeg, File cvOutFile) throws Exception
 	{
 		//get the length of each word in the feature space <Fea ID, Length of word>
 		Map<Integer,Integer> wordLength=CreateAttack.getWordLength(new File(ConstantClass.FeatureFile));
@@ -44,6 +44,7 @@ public class CreateAttackPoints{
 		BufferedWriter accOut=new BufferedWriter(new FileWriter(accOutFile,true));
 		BufferedWriter ctOutPos=new BufferedWriter(new FileWriter(ctOutFilePos,true));
 		BufferedWriter ctOutNeg=new BufferedWriter(new FileWriter(ctOutFileNeg,true));
+		BufferedWriter cvOut=new BufferedWriter(new FileWriter(cvOutFile,true));
 		List<LabeledFeatureVector> train=new Vector<LabeledFeatureVector>();
 		//read vectors in from each train file
 		int total=0;
@@ -86,6 +87,7 @@ public class CreateAttackPoints{
 			id++;
 			w_previous=m.getLinearWeights();
 			LabeledFeatureVector attackVec=point2Vec(attack.attackLabel(), attack.attackPoint());
+			cvOut.write("0\t"+attackVec.toString());
 			//add data ten times to the training set
 			for(int j=0;j<10;j++)
 			{
@@ -97,17 +99,20 @@ public class CreateAttackPoints{
 			else
 				ctOutNeg.write(ct+"\n");
 			accOut.flush();
+			cvOut.flush();
 			ctOutPos.flush();
 			ctOutNeg.flush();
 			System.out.println("Trained on "+(train.size()-1)+" tweets ( "+(double)train.size()/(double)total+" of all the data ) with acc: "+acc);
 			System.gc();
 		}
 		accOut.flush();
+		cvOut.flush();
 		ctOutPos.flush();
 		ctOutNeg.flush();
 		accOut.close();
 		ctOutPos.close();
 		ctOutNeg.close();
+		cvOut.close();
 }
 
 
