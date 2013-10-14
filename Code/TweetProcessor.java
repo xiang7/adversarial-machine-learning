@@ -29,7 +29,8 @@ public class TweetProcessor {
 				ConstantClass.folder + "neg"),
 				v.get(0).size()>v.get(1).size()?v.get(0).subList(0, v.get(1).size()):v.get(0),
 				v.get(1).size()>v.get(0).size()?v.get(1).subList(0,v.get(0).size()):v.get(1));
-
+//test shortenUsername
+//		System.out.println(shortenUsername("@7599b55dbdce4144422b0056d5331a69eecab6cafeb38e73e23215ea5c407bc5 oke, kirain ilang taunya lupa"));
 	}
 
 	/**
@@ -68,10 +69,12 @@ public class TweetProcessor {
 	public static String extractText(String temp) throws Exception {
 		if (ConstantClass.dataSetName == ConstantClass.EgyptianDataSet) {
 			String split[] = temp.split("\t");
-			temp = split[4].toUpperCase();
+			//temp = split[4].toUpperCase(); //for preprocessing experiment, don't do the to upper case
+			temp = split[4];
 		} else if (ConstantClass.dataSetName == ConstantClass.ElectionDataSet)
 			temp = temp.replaceAll(",", " ");
-		return temp.trim().toUpperCase();
+		//return temp.trim().toUpperCase(); //for preprocessing experiment, don't do the to upper case
+		return temp.trim();
 	}
 
 	/**
@@ -94,14 +97,14 @@ public class TweetProcessor {
 			temp = extractText(temp);
 
 			// check retweet
-			if (temp.startsWith("RT "))
+			if (temp.toUpperCase().startsWith("RT "))
 				continue;
 			temp = temp.replaceAll("\\s+", " ");
-			if (temp.indexOf(" RT ") != -1)
+			if (temp.toUpperCase().indexOf(" RT ") != -1)
 				continue;
 
 			// check :P
-			if (temp.indexOf(":P") != -1)
+			if (temp.toUpperCase().indexOf(":P") != -1)
 				continue;
 
 			// check emoticon and find out whether it is positive or negative
@@ -133,11 +136,11 @@ public class TweetProcessor {
 				temp=shortenUsername(temp);
 
 			// change urls into URL
-			temp = temp.replaceAll("HTTP://.*? ", "URL ");
-			temp = temp.replaceAll("HTTPS://.*? ", "URL ");
+			String urlValidChar="A-Za-z0-9\\-\\._~:\\/\\?\\#\\[\\]@!$&'\\(\\)\\*\\+,;=%";
+			temp = temp.replaceAll("(HTTP|http|https|Http|Https|HTTPS)://["+urlValidChar+"]*", "URL ");
 
 			// change multiple occurrences into 2
-			temp = temp.trim().replaceAll("([A-Z])\\1{2,}", "$1$1");
+			//temp = temp.trim().replaceAll("([A-Z])\\1{2,}", "$1$1"); //not doing this for preprocessing experiment
 
 			if (temp.split("\\s+").length <= 1)
 				continue;
@@ -166,20 +169,20 @@ public class TweetProcessor {
 	}
 	
 	public static String shortenUsername(String s){
-			StringBuffer sb=new StringBuffer();
-			String[] sp=s.split("\\s+");
-			for(String temp:sp){
-				try{
-				if(temp.trim().startsWith("@")&&temp.trim().length()>=5)
-					sb.append("@USER_"+temp.trim().substring(1,6)+" "); //jump over the @ sign
-				else
-					sb.append(temp.trim()+" ");
-				}catch(Exception e){
-					System.out.println(s);
-					return null;
-				}
-			}
-			return new String(sb);
+		final int normLen=64;
+		int idx=s.indexOf("@");
+		while(idx!=-1){
+			if(s.length()<=idx+normLen)
+				break;
+			String temp=s.substring(idx+1,idx+normLen+1); //all anonymized user names are of length 66
+			if(temp.matches("[0-9A-Za-z]{"+normLen+"}")){
+				s=s.replaceAll(temp,"USER_"+temp.substring(0,6));
+				idx=idx+6;
+			}else
+				idx++;
+			idx=s.indexOf("@",idx);
+		}	
+		return s;
 	}
 
 	/**
