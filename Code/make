@@ -1,0 +1,1 @@
+javac -cp .:./jnisvmlight.jar:stanford-postagger.jar:./weka.jar:./stanford-postagger-2012-07-09.jar:./svmlight-64.dll *.java
