@@ -26,15 +26,15 @@ public class FeatureExtractor {
 		
 		extractFeatures(
 				new File(ConstantClass.FeatureFile),
-				new File[] {new File(ConstantClass.folder+"pos1"),
-				new File(ConstantClass.folder+"neg1"),
+				new File[] {new File(ConstantClass.folder+"pos2"),
+				new File(ConstantClass.folder+"neg2"),
 				new File(ConstantClass.folder+"posTest"),
 				new File(ConstantClass.folder+"negTest"),
 				new File(ConstantClass.folder+"posAttack"),
 				new File(ConstantClass.folder+"negAttack")
 				},
-				new File[] {new File(ConstantClass.folder+"pos1Vec"),
-			new File(ConstantClass.folder+"neg1Vec"),
+				new File[] {new File(ConstantClass.folder+"pos2Vec"),
+			new File(ConstantClass.folder+"neg2Vec"),
 			new File(ConstantClass.folder+"posTestVec"),
 			new File(ConstantClass.folder+"negTestVec"),
 				new File(ConstantClass.folder+"posAttackVec"),

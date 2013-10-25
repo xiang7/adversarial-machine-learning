@@ -9,13 +9,13 @@ public class CreateAttackPoints{
 
 	public static void main(String[] args) throws Exception{
 			//create
-			run(	new File[] {new File(ConstantClass.folder+"pos1Vec"),new File(ConstantClass.folder+"neg1Vec")},
+			run(	new File[] {new File(ConstantClass.folder+"pos2Vec"),new File(ConstantClass.folder+"neg2Vec")},
 					false,
 					new File(ConstantClass.TestVec),
-					new File(ConstantClass.folder+"CREATEACC1"+ConstantClass.currClassifierName),
-					new File(ConstantClass.folder+"CREATECT1POS"+ConstantClass.currClassifierName),
-					new File(ConstantClass.folder+"CREATECT1NEG"+ConstantClass.currClassifierName),
-					new File(ConstantClass.folder+"CREATECV1"+ConstantClass.currClassifierName) //to store the created attack vectors, for continued training/attack
+					new File(ConstantClass.folder+"CREATEACC2"+ConstantClass.currClassifierName),
+					new File(ConstantClass.folder+"CREATECT2POS"+ConstantClass.currClassifierName),
+					new File(ConstantClass.folder+"CREATECT2NEG"+ConstantClass.currClassifierName),
+					new File(ConstantClass.folder+"CREATECV2"+ConstantClass.currClassifierName) //to store the created attack vectors, for continued training/attack
 					);
 	}
 
@@ -39,7 +39,6 @@ public class CreateAttackPoints{
 		Map<Integer,Integer> wordLength=CreateAttack.getWordLength(new File(ConstantClass.FeatureFile));
 		//get the string of each word in the feature space <Fea ID, string>
 		Map<Integer,String> wordString= getWordString(new File(ConstantClass.FeatureFile));
-		double w_previous[]=null;
 		//read in all the training vectors
 		BufferedWriter accOut=new BufferedWriter(new FileWriter(accOutFile,true));
 		BufferedWriter ctOutPos=new BufferedWriter(new FileWriter(ctOutFilePos,true));
@@ -65,12 +64,14 @@ public class CreateAttackPoints{
 
 		//add a max feature into the last sample
 		LabeledFeatureVector tempL=new LabeledFeatureVector(1.0,new int[] {wordString.size()},new double[] {1.0});
+//		LabeledFeatureVector tempL=new LabeledFeatureVector(1.0,new int[] {ConstantClass.MaxNumFea},new double[] {1.0});
 		train.add(tempL);
 
 		double acc=1.0;//accuracy
 		String ct="";//created tweet
 		int id=0;
-		for(;acc>0.5;)
+		int numAttack=0;
+		for(;numAttack<1500;)
 		{
 			Attack attack=null;
 			LabeledFeatureVector[] tr=train.toArray(new LabeledFeatureVector[train.size()]);
@@ -85,7 +86,6 @@ public class CreateAttackPoints{
 				s_id="0"+s_id;
 			ct=s_id+"\t"+attack.attackTweet(wordString);		//created tweet
 			id++;
-			w_previous=m.getLinearWeights();
 			LabeledFeatureVector attackVec=point2Vec(attack.attackLabel(), attack.attackPoint());
 			cvOut.write("0\t"+attackVec.toString());
 			//add data ten times to the training set
@@ -98,6 +98,7 @@ public class CreateAttackPoints{
 				ctOutPos.write(ct+"\n");
 			else
 				ctOutNeg.write(ct+"\n");
+			numAttack++;
 			accOut.flush();
 			cvOut.flush();
 			ctOutPos.flush();

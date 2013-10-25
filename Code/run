@@ -1,4 +1,4 @@
-java -cp .:./jnisvmlight.jar:stanford-postagger.jar:./weka.jar:./stanford-postagger-2012-07-09.jar:./svmlight-64.dll "-Djava.library.path=/homes/xiang7/adversarial-machine-learning/Code" TweetNormalizer
+java -cp .:./jnisvmlight.jar:stanford-postagger.jar:./weka.jar:./stanford-postagger-2012-07-09.jar:./svmlight-64.dll "-Djava.library.path=/homes/xiang7/adversarial-machine-learning/Code" IncrementalTrain
 #IncrementalTrain
 #CreateAttackPoints
 #FeatureExtractor

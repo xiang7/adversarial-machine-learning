@@ -9,10 +9,10 @@ public class IncrementalTrain{
 
 	public static void main(String[] args) throws Exception{
 			//create
-			run(	new File[] {new File(ConstantClass.folder+"pos1Vec"),new File(ConstantClass.folder+"neg1Vec")},
+			run(	new File[] {new File(ConstantClass.folder+"pos2Vec"),new File(ConstantClass.folder+"neg2Vec")},
 					new File(ConstantClass.folder+"attackVec"),
 					new File(ConstantClass.TestVec),
-					new File(ConstantClass.folder+"CREATEACC1"+ConstantClass.currClassifierName)
+					new File(ConstantClass.folder+"CREATEACC2"+ConstantClass.currClassifierName)
 					);
 	}
 
